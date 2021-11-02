@@ -3,6 +3,9 @@
 #nullable disable
 
 using System.ComponentModel.DataAnnotations;
+
+using DynamicRoleBasedAuth.Identity;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -14,7 +17,6 @@ public class RegisterModel : PageModel
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IUserStore<IdentityUser> _userStore;
-    private readonly IUserEmailStore<IdentityUser> _emailStore;
     private readonly ILogger<RegisterModel> _logger;
 
     public RegisterModel(
@@ -25,7 +27,6 @@ public class RegisterModel : PageModel
     {
         _userManager = userManager;
         _userStore = userStore;
-        _emailStore = GetEmailStore();
         _signInManager = signInManager;
         _logger = logger;
     }
@@ -63,7 +64,6 @@ public class RegisterModel : PageModel
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -93,7 +93,6 @@ public class RegisterModel : PageModel
             var user = CreateUser();
 
             await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
             user.EmailConfirmed = true;
             var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -101,10 +100,20 @@ public class RegisterModel : PageModel
             {
                 _logger.LogInformation("User created a new account with password.");
 
+                var addToRoleResult = await _userManager.AddToRoleAsync(user, Roles.User);
 
+                if (!addToRoleResult.Succeeded)
+                {
+                    foreach (var error in addToRoleResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return Page();
+                }
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return LocalRedirect(returnUrl);
             }
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
@@ -127,14 +136,5 @@ public class RegisterModel : PageModel
                 $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                 $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
         }
-    }
-
-    private IUserEmailStore<IdentityUser> GetEmailStore()
-    {
-        if (!_userManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<IdentityUser>)_userStore;
     }
 }
