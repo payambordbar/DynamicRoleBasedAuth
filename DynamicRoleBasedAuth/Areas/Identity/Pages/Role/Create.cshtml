@@ -1,0 +1,30 @@
+﻿@page
+@model DynamicRoleBasedAuth.Areas.Identity.Pages.Role.CreateModel
+
+<section>
+	<form method="post">
+		<h2>Create a Role.</h2>
+		<hr />
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+		<div class="form-floating mb-2">
+			<input asp-for="Input.Name" class="form-control" />
+			<label asp-for="Input.Name" class="form-label"></label>
+			<span asp-validation-for="Input.Name" class="text-danger"></span>
+		</div>
+		<div class="form-floating mb-2">
+			<select asp-for="Input.PareentId" asp-items="@Model.Roles?.Select(x=>new SelectListItem(x.Name,x.Id))" class="form-select" aria-label="Default select example">
+				<option value="" selected>_</option>
+			</select>
+			<label asp-for="Input.PareentId" class="form-label"></label>
+			<span asp-validation-for="Input.PareentId" class="text-danger"></span>
+		</div>
+		<div>
+			<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+		</div>
+	</form>
+</section>
+
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}

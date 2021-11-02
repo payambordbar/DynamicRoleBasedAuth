@@ -1,0 +1,32 @@
+﻿@page
+
+@model DynamicRoleBasedAuth.Areas.Identity.Pages.Role.IndexModel
+@{
+	ViewData["Title"] = "Roles";
+	var i = 1;
+}
+
+<h1>@ViewData["Title"]</h1>
+<a class="btn btn-primary" asp-page="create">Roles</a>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Title</th>
+			<th scope="col">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var role in Model.Roles!)
+		{
+			<tr>
+				<th scope="row">@(i++)</th>
+				<td>@role.Name</td>
+				<td>
+					<a class="btn btn-sm btn-secondary" asp-page="Permissions" asp-route-roleId="@role.Id">Change Permissions</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+

@@ -1,0 +1,19 @@
+﻿@page
+@model DynamicRoleBasedAuth.Areas.Identity.Pages.User.ChangeRoleModel
+
+<section>
+	<form method="post" asp-route-userId="@Model.SelectedUser.Id">
+		<h2>Change @Model.SelectedUser.UserName's Role.</h2>
+		<hr />
+		<div class="form-floating mb-2">
+			<select asp-for="Role" asp-items="@Model.RolesSelect" class="form-select">
+				
+			</select>
+			<label asp-for="RolesSelect" class="form-label"></label>
+			<span asp-validation-for="RolesSelect" class="text-danger"></span>
+		</div>
+		<div>
+			<button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Change</button>
+		</div>
+	</form>
+</section>

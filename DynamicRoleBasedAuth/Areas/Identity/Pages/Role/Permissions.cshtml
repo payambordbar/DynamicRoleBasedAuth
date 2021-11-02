@@ -1,0 +1,74 @@
+﻿@page
+@using DynamicRoleBasedAuth.Identity
+@using Microsoft.AspNetCore.Antiforgery
+@model DynamicRoleBasedAuth.Areas.Identity.Pages.Role.PermissionsModel
+@inject IAntiforgery antiforgery
+@{
+	var token = antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+	var i = 1;
+}
+
+<h2 id="role-name">@Model.Role</h2>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Name</th>
+			<th scope="col">Permission</th>
+			<th scope="col">Path</th>
+			@if (Model.Role is not Roles.Admin)
+			{
+				<th scope="col">Action</th>
+			}
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var claim in Model.Claims.OrderBy(x => x.Claim))
+		{
+			<tr>
+				<th scope="row">@(i++)</th>
+				<td>@claim.Name</td>
+				<td>@claim.Claim</td>
+				<td><small>@claim.Path</small></td>
+				<td>
+					@if (Model.Role is not Roles.Admin)
+					{
+						@if (claim.IsGranted)
+						{
+							<input type="button" class="btn btn-sm btn-danger" value="Remove Access" data-claim="@claim.Claim" id="toggle-permission" />
+						}
+						else
+						{
+							<input type="button" class="btn btn-sm btn-success" value="Grant Access" data-claim="@claim.Claim" id="toggle-permission" />
+						}
+					}
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+@section Scripts{
+<script>
+	$("input[data-claim]").unbind().click(function(){
+		var el = this;
+		const claim =$(el).data("claim");
+		const role = $("#role-name").html();
+		fetch("@Url.Page("Permissions","toggle")",{
+			method:"POST",
+			body:JSON.stringify({role, claim}),
+			headers: { "RequestVerificationToken": "@token",
+			'Content-type': 'application/json; charset=UTF-8'}
+		}).then(res=> {
+			if(res.ok)
+			{
+				if($(el).hasClass('btn-success')){
+					$(el).removeClass('btn-success').addClass('btn-danger').val('Remove Access');
+				}else{
+					$(el).removeClass('btn-danger').addClass('btn-success').val('Grant Access');
+				}
+			}
+		})
+	})
+</script>
+}
