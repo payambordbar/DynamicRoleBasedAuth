@@ -1,51 +1,109 @@
-﻿<!DOCTYPE html>
+﻿@using DynamicRoleBasedAuth.Identity
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - DynamicRoleBasedAuth</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - DynamicRoleBasedAuth</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DynamicRoleBasedAuth</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="identity" asp-page="/account/login">Login</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DynamicRoleBasedAuth</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a class="nav-link text-dark" dynamic-access asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" dynamic-access asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+						</li>
 
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2021 - DynamicRoleBasedAuth - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>
-<script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+						<li class="nav-item dropdown" render-if-has-sub-menu>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Product
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="product" asp-action="index">Index</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="product" asp-action="create">Create</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="product" asp-action="Edit">Edit</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="product" asp-action="Delete">Delete</a></li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown" render-if-has-sub-menu>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								User
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="User" asp-action="index">Index</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="User" asp-action="create">Create</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="User" asp-action="Edit">Edit</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="User" asp-action="Delete">Delete</a></li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown" render-if-has-sub-menu>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Data
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="data" asp-action="index">Index</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="data" asp-action="create">Create</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="data" asp-action="Edit">Edit</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="data" asp-action="Delete">Delete</a></li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown" render-if-has-sub-menu>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Checkout
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="Checkout" asp-action="index">Index</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="Checkout" asp-action="create">Create</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="Checkout" asp-action="Edit">Edit</a></li>
+								<li><a class="dropdown-item" dynamic-access asp-area="" asp-controller="Checkout" asp-action="Delete">Delete</a></li>
+							</ul>
+						</li>
+						<li class="nav-item ms-auto">
+							@if (User?.Identity?.IsAuthenticated ?? false)
+							{
+								<a class="nav-link d-inline-block text-dark" asp-area="identity" asp-page="/account/logout">@User.Identity.Name</a>
+								if (User.IsInRole(Roles.Admin))
+								{
+									<a class="nav-link d-inline-block text-dark" asp-area="identity" asp-page="/Index">Admin Panel</a>
+								}
+								<a class="nav-link d-inline-block text-dark" asp-area="identity" asp-page="/account/logout">Logout</a>
+							}
+							else
+							{
+								<a class="nav-link text-dark" asp-area="identity" asp-page="/account/login">Login</a>
+							}
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; 2021 - DynamicRoleBasedAuth - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
