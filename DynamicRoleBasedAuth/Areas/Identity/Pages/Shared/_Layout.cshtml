@@ -1,0 +1,20 @@
+﻿@{
+	Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+	<div class="col-md-4 bg-light rounded-3" style="height:75vh;">
+		<div class="btn-group-vertical w-100">
+			<a class="btn btn-outline-primary" asp-area="Identity" asp-page="/User/Index">Users</a>
+			<a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Role/Index">Roles</a>
+		</div>
+	</div>
+
+	<div class="col-md-8 ">
+		@RenderBody()
+	</div>
+</div>
+
+@section Scripts{
+	@RenderSection("Scripts",false)
+}
